@@ -73,6 +73,7 @@ int main() {
 
   IF_TIME(t_start = rtclock());
 
+#pragma omp parallel for collapse(2)  
 for (int ii = 0; ii < N; ii += Ti) {
  for (int jj = 0; jj < N; jj += Tj) {
   for (int kk = 0; kk < N; kk += Tk) {

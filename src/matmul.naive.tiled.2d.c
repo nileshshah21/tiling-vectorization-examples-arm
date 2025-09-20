@@ -73,25 +73,17 @@ int main() {
 
   IF_TIME(t_start = rtclock());
 
-for (int ii = 0; ii < N; ii += Ti) {
- for (int jj = 0; jj < N; jj += Tj) {
-  for (int kk = 0; kk < N; kk += Tk) {
-   for (int i = ii; i < min(ii + Ti, N); i++) {
-    for (int k = kk; k < min(kk + Tk, N); k++) {
-       for (int j = jj; j < min(jj + Tj, N); j += 4) {  
-            float32x4_t c_vec = vld1q_f32(&C[i][j]);
-            float32x4_t b_vec = vld1q_f32(&B[k][j]);
-            float32x4_t a_vec = vdupq_n_f32(A[i][k]); 
-            c_vec = vfmaq_f32(c_vec, a_vec, b_vec);
-            vst1q_f32(&C[i][j], c_vec);
-       }
-	  for (; j < min(jj + Tj, N); j++) // Remaining iterations
-		   C[i][j] += A[i][k] * B[k][j];	
+    for (int ii = 0; ii < N; ii += Ti) {
+    for (int jj = 0; jj < N; jj += Tj) {
+      for (int i = ii; i < min(ii + Ti, N); i++) {
+        for (int j = jj; j < min(jj + Tj, N); j++) {
+          for (int k = 0; k < N; k++) {
+            C[i][j] += A[i][k] * B[k][j];
+          }
+        }
+      }
     }
-   }
   }
- }
-}
 
 
   IF_TIME(t_end = rtclock());
